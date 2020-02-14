@@ -4,11 +4,18 @@ import "./Home.css";
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      currentUserID: this.props.currentUserID
+    };
   }
 
+  callbackFunction = childData => {
+    this.setState({ deckID: childData });
+  };
+
   render() {
-    return <div className="Home">Welcom to my web site</div>;
+    return <div className={"Home"}>Welcome to my website</div>;
   }
 }
+
 export default Home;
