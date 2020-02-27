@@ -1,60 +1,12 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
+import "./login-regis.css";
 
 class Register extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: "", password: "", message: "" };
-
-    this.handleChangeUsername = this.handleChangeUsername.bind(this);
-    this.handleChangePassword = this.handleChangePassword.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {};
   }
-
-  handleChangeUsername(event) {
-    this.setState({ username: event.target.value });
-  }
-
-  handleChangePassword(event) {
-    this.setState({ password: event.target.value });
-  }
-
-  // async handleSubmit(event) {
-  //   let response;
-  //   event.preventDefault();
-  //   try {
-  //     response = await fetch("http://localhost:8000/auth/register/", {
-  //       method: "POST",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json"
-  //       },
-  //       body: JSON.stringify({
-  //         username: this.state.username,
-  //         password: this.state.password
-  //       })
-  //     });
-  //     console.log(response.status);
-  //     if (response.status === 201) {
-  //       this.setState({ message: "Register Sucess" });
-  //     } else {
-  //       this.setState({ message: "Try again" });
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-
-  //   try {
-  //     let url =
-  //       "http://localhost:8000/words/initialise/" + this.state.username + "/1/";
-  //     fetch(url)
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-
-  //   this.setState({ username: "", password: "" });
-  // }
-
   render() {
     return (
       <div class="form">
