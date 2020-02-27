@@ -1,6 +1,6 @@
 import React from "react";
 import "./Home.css";
-// import NavBar from "./NavBar";
+import { Image, Container, Row, Col, Button } from "react-bootstrap";
 
 class Home extends React.Component {
   constructor(props) {
@@ -14,8 +14,18 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className={"Home"}>Welcome to my website</div>
+      <div className="home">
+        <div class="home1">
+          <div>
+            <b>
+              MyProfile.com helps you connect and share with the people in your
+              life.
+            </b>
+          </div>
+          <Button variant="outline-warning" size="lg" href="/register">
+            Join Us
+          </Button>
+        </div>
       </div>
     );
   }
