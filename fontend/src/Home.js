@@ -15,16 +15,17 @@ class Home extends React.Component {
   render() {
     return (
       <div className="home">
-        <div class="home1">
-          <div>
-            <b>
-              MyProfile.com helps you connect and share with the people in your
-              life.
-            </b>
-          </div>
-          <Button variant="outline-warning" size="lg" href="/register">
+        <div className="mid">
+          <b id="font-size-40">MyProfile.com</b>
+          <p id="font-size-20">
+            helps you connect and share with the people in your life.
+          </p>
+          <Button variant="primary" size="lg" href="/register">
             Join Us
           </Button>
+          <p id="font-size-15">
+            or <a href="/login">Login</a>
+          </p>
         </div>
       </div>
     );

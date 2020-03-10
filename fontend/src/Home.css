@@ -1,20 +1,33 @@
-/* .home .container,
-.home .row,
-.home .col {
-  max-width: 100%;
-  margin: 0px;
-  padding: 0px;
+.home {
+  position: relative;
   text-align: center;
-} */
-
-.home1 {
-  background-color: white;
-  font-size: 25px;
-  padding: 50px;
-  margin: 100px;
-  height: 400px;
-  width: 550px;
+  height: 666.4px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("Material/HomePic.jpg");
+  background-position: center;
+  background-size: cover;
 }
-.home1 .btn {
-  margin-top: 20px;
+
+.home .mid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+#font-size-20 {
+  font-size: 20px;
+}
+#font-size-15 {
+  font-size: 15px;
+}
+#font-size-40 {
+  font-size: 40px;
+}
+
+.mid .btn {
+  width: 200px;
+  margin-bottom: 5px;
 }

@@ -1,7 +1,28 @@
-Form {
-  width: 400px;
-  padding: 50px;
-  margin-left: 50px;
-  margin-top: 50px;
+.login,
+.regis {
+  height: 666.4px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("Material/LoginRegisPic.jpg");
+  background-position: center;
+  background-size: cover;
+}
+form {
+  width: 300px;
   background-color: white;
+}
+
+.login .card,
+.regis .card {
+  width: 380px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+.login .card-body,
+.regis .card-body {
+padding: 40px;
 }
