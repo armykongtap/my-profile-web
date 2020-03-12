@@ -6,7 +6,14 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    window.location.href = "/profile";
+  };
+
   render() {
     return (
       <div className="login">
@@ -25,8 +32,8 @@ class Login extends React.Component {
               <Form.Group controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Remember Me" />
               </Form.Group>
-              <Button variant="primary" type="Login" block>
-                Submit
+              <Button variant="primary" type="submit" block>
+                Login
               </Button>
               <Form.Text className="text-muted">
                 Don't have an account? <a href="/register">Create an account</a>

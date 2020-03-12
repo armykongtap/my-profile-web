@@ -1,0 +1,59 @@
+.profile {
+  margin-top: 20px;
+}
+
+.info .rounded-circle {
+  height: 200px;
+  border: 2px solid #ddd;
+  padding: 5px;
+}
+
+.info #name {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.info #about {
+  margin-bottom: 20px;
+}
+
+.info #edit-profile {
+  width: 100px;
+}
+
+.userrow .rounded-circle {
+  height: 50px;
+  border: 1px solid #ddd;
+  padding: 1px;
+}
+
+#margin-top-10 {
+  margin-top: 10px;
+}
+
+#margin-top-20 {
+  margin-top: 20px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#no-padding {
+  padding: 0px;
+}
+
+.card-header-tabs {
+  margin-bottom: 0px !important;
+  border-bottom: 1px solid #ddd !important;
+}
+
+form {
+  width: auto;
+}
+
+#right {
+  float: right;
+}
+
+.modal-content .btn {
+  width: 65px;
+}

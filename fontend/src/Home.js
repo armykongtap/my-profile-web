@@ -1,11 +1,11 @@
 import React from "react";
 import "./Home.css";
-import { Image, Container, Row, Col, Button } from "react-bootstrap";
+import { Image, Container, Row, Col, Button, Card } from "react-bootstrap";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isLogin: 1 };
   }
 
   // callbackFunction = childData => {

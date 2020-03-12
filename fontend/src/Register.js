@@ -6,7 +6,14 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    window.location.href = "/profile";
+  };
+
   render() {
     return (
       <div className="regis">
@@ -30,8 +37,8 @@ class Register extends React.Component {
               {/* <Form.Group controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Remember Me" />
           </Form.Group> */}
-              <Button variant="primary" type="Login">
-                Submit
+              <Button variant="primary" type="submit" block>
+                Register
               </Button>
               <Form.Text className="text-muted">
                 Already have an account? <a href="/login">Login</a>
