@@ -36,15 +36,20 @@ def login(request):
     if request.method == 'POST':
         user = authenticate(
             username=data['username'], password=data['password'])
-        request.user = user
         if user is not None:
+            request.user = user
             login(request._request)
             return Response(user.username, status=status.HTTP_201_CREATED)
         else:
-            return Response("GUEST", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response("Username or Password is not correct.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
 def logout(request):
-    logout(request._request)
-    return Response(1, status=status.HTTP_201_CREATED)
+    data = request.data
+    if request.method == 'POST':
+        user = authenticate(
+            username=data['username'], password=data['password'])
+        request.user = user
+        logout(request._request)
+        return Response(1, status=status.HTTP_201_CREATED)
