@@ -13,7 +13,6 @@ form {
 
 .login .card,
 .regis .card {
-  width: 380px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -21,8 +20,23 @@ form {
   transform: translate(-50%, -50%);
 }
 
+.login .card {
+  width: 380px;
+}
+.regis .card {
+  width: 500px;
+}
 
 .login .card-body,
 .regis .card-body {
-padding: 40px;
+  padding: 40px;
+}
+
+.regis button {
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+#red {
+  color: red;
 }
