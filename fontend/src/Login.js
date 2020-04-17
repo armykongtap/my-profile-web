@@ -29,12 +29,24 @@ class Login extends React.Component {
         postData: { username: "", password: "" },
         message: "Username or Password is incorrect",
       });
-    } else {
-      res.json().then((data) => {
-        localStorage.setItem("token", data.auth_token);
-      });
-      window.location.href = "/profile";
+      return 0;
     }
+    res.json().then((data) => {
+      sessionStorage.setItem("token", data.auth_token);
+    });
+
+    await fetch("http://localhost:8000/auth/users/me/", {
+      headers: { Authorization: "Token " + sessionStorage.getItem("token") },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        sessionStorage.setItem("id", data.id);
+        sessionStorage.setItem("username", data.username);
+      });
+
+    window.location.href = "/profile";
   };
 
   render() {

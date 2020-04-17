@@ -4,6 +4,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 from users.models import UserModel
 from users.serializers import UserModelSerializer
@@ -34,7 +35,7 @@ def user_list(request):
         return JsonResponse(serializer.errors, status=400)
 
 
-@api_view(['GET', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request, pk):
 
     try:
@@ -45,6 +46,12 @@ def user_detail(request, pk):
     if request.method == 'GET':
         serializer = UserModelSerializer(user)
         return JsonResponse(serializer.data, json_dumps_params={'ensure_ascii': False})
+    elif request.method == 'PUT':
+        serializer = UserModelSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         user.delete()
         return HttpResponse(status=204)

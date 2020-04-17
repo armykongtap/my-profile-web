@@ -7,7 +7,7 @@ class Register extends React.Component {
     super(props);
     this.state = {
       postData1: { username: "", password: "" },
-      postData2: { userId: 0, firstName: "", lastName: "" },
+      postData2: { userId: 0, firstName: "", lastName: "", about: "Hello eyeryone!" },
       message: "",
     };
     this.handleChange1.bind(this);

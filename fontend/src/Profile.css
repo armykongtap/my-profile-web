@@ -2,22 +2,22 @@
   margin-top: 20px;
 }
 
-.info .rounded-circle {
+.my-profile .rounded-circle {
   height: 200px;
   border: 2px solid #ddd;
   padding: 5px;
 }
 
-.info #name {
+.my-profile #name {
   font-size: 20px;
   margin-bottom: 10px;
 }
 
-.info #about {
+.my-profile #about {
   margin-bottom: 20px;
 }
 
-.info #edit-profile {
+.my-profile #edit-profile {
   width: 100px;
 }
 
