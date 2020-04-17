@@ -8,79 +8,69 @@ class Register extends React.Component {
     this.state = {
       postData1: { username: "", password: "" },
       postData2: { userId: 0, firstName: "", lastName: "" },
-      message: ""
+      message: "",
     };
     this.handleChange1.bind(this);
     this.handleChange2.bind(this);
     this.handleSubmit.bind(this);
   }
 
-  handleChange1 = e => {
+  handleChange1 = (e) => {
     let tempData = this.state.postData1;
     tempData[e.target.name] = e.target.value;
     this.setState({
-      postData1: tempData
+      postData1: tempData,
     });
   };
 
-  handleChange2 = e => {
+  handleChange2 = (e) => {
     let tempData = this.state.postData2;
     tempData[e.target.name] = e.target.value;
     this.setState({
-      postData2: tempData
+      postData2: tempData,
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/auth/users/", {
+    const res = await fetch("http://localhost:8000/auth/users/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.state.postData1)
-    })
-      .then(res => {
-        this.setState({ isFetch1ok: res.ok });
-        return res.json();
-      })
-      .then(data => {
-        this.setState({ data1: data });
+      body: JSON.stringify(this.state.postData1),
+    });
+    if (!res.ok) {
+      res.json().then((data) => {
+        this.setState({
+          postData1: { username: "", password: "" },
+          postData2: { firstName: "", lastName: "" },
+          message: Object.values(data)[0][0],
+        });
       });
-
-    console.log(this.state);
-
-    // .then(res => {
-    //   if (res.ok) {
-    //     fetch("http://localhost:8000/users/", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify(this.state.postData)
-    //     }).then(res2 => {
-    //       if (res2.ok) {
-    //         this.setState({
-    //           message: "Account was created"
-    //         });
-    //         console.log(this.state);
-    //         setTimeout(() => {
-    //           window.location.href = "/";
-    //         }, 1000);
-    //       }
-    //     });
-    //     return [["Please try again later"]];
-    //   }
-    //   return res.json();
-    // })
-    // .then(data => {
-    //   this.setState({
-    //     postData: {
-    //       firstName: "",
-    //       lastName: "",
-    //       password: "",
-    //       username: ""
-    //     },
-    //     message: Object.values(data)[0][0]
-    //   });
-    // });
-  }
+    } else {
+      await res.json().then((data) => {
+        let tempData = this.state.postData2;
+        tempData["userId"] = data.id;
+        this.setState({
+          postData2: tempData,
+        });
+      });
+      const res2 = await fetch("http://localhost:8000/users/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(this.state.postData2),
+      });
+      this.setState({
+        postData1: { username: "", password: "" },
+        postData2: { userId: 0, firstName: "", lastName: "" },
+        message: "",
+      });
+      if (res2.ok) {
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1000);
+      }
+    }
+  };
 
   render() {
     return (
