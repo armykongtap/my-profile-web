@@ -5,13 +5,36 @@ import "./login-regis.css";
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { postData: { username: "", password: "" }, message: "" };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit = e => {
+  handleChange = (e) => {
+    let tempData = this.state.postData;
+    tempData[e.target.name] = e.target.value;
+    this.setState({
+      postData: tempData,
+    });
+  };
+
+  handleSubmit = async (e) => {
     e.preventDefault();
-    window.location.href = "/profile";
+    const res = await fetch("http://localhost:8000/auth/token/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.state.postData),
+    });
+    if (!res.ok) {
+      this.setState({
+        postData: { username: "", password: "" },
+        message: "Username or Password is incorrect",
+      });
+    } else {
+      res.json().then((data) => {
+        localStorage.setItem("token", data.auth_token);
+      });
+      window.location.href = "/profile";
+    }
   };
 
   render() {
@@ -21,17 +44,32 @@ class Login extends React.Component {
           <Card.Header>Login</Card.Header>
           <Card.Body>
             <Form onSubmit={this.handleSubmit}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Email" />
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  name="username"
+                  value={this.state.postData.username}
+                  type="text"
+                  placeholder="Username"
+                  onChange={this.handleChange}
+                  required
+                />
               </Form.Group>
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group>
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={this.state.postData.password}
+                  onChange={this.handleChange}
+                  required
+                />
               </Form.Group>
-              <Form.Group controlId="formBasicCheckbox">
+              {/* <Form.Group>
                 <Form.Check type="checkbox" label="Remember Me" />
-              </Form.Group>
+              </Form.Group> */}
+              <div id="red">{this.state.message}</div>
               <Button variant="primary" type="submit" block>
                 Login
               </Button>

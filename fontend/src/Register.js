@@ -65,9 +65,7 @@ class Register extends React.Component {
         message: "",
       });
       if (res2.ok) {
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 1000);
+        window.location.href = "/login";
       }
     }
   };
