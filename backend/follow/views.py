@@ -7,7 +7,7 @@ from follow.models import FollowModel
 from follow.serializers import FollowModelSerializer
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 def follow_list(request):
 
     if request.method == 'GET':
@@ -22,6 +22,16 @@ def follow_list(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201, json_dumps_params={'ensure_ascii': False})
         return JsonResponse(serializer.errors, status=400)
+    elif request.method == 'DELETE':
+        data = JSONParser().parse(request)
+        print(data)
+        try:
+            follow = FollowModel.objects.get(
+                userId_A=data['userId_A'], userId_B=data['userId_B'])
+        except FollowModel.DoesNotExist:
+            return HttpResponse(status=404)
+        follow.delete()
+        return HttpResponse(status=204)
 
 
 @api_view(['GET', 'DELETE'])

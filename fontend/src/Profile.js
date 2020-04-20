@@ -25,21 +25,7 @@ class MyProfile extends React.Component {
   handleShowModalEdit = () => this.setState({ showModalEdit: true });
 
   async componentDidMount() {
-    await fetch("http://localhost:8000/auth/users/me/", {
-      headers: { Authorization: "Token " + sessionStorage.getItem("token") },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        let tempData = this.state.userData;
-        tempData["userId"] = data.id;
-        tempData["username"] = data.username;
-        this.setState({
-          userData: tempData,
-        });
-      });
-    await fetch("http://localhost:8000/users/" + this.state.userData.userId + "/")
+    await fetch("http://localhost:8000/users/" + this.props.profileUserId + "/")
       .then((res) => {
         return res.json();
       })
@@ -69,24 +55,28 @@ class MyProfile extends React.Component {
                     <b>{this.state.userData.firstName + " " + this.state.userData.lastName}</b>
                   </div>
                   <div id="about">{this.state.userData.about}</div>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    id="edit-profile"
-                    onClick={this.handleShowModalEdit}
-                  >
-                    Edit Profile
-                  </Button>
+                  {parseInt(sessionStorage.getItem("id")) === this.props.profileUserId ? (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      id="edit-profile"
+                      onClick={this.handleShowModalEdit}
+                    >
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </Col>
               </Row>
               <Row id="margin-top-20">
                 <Col>
                   <Tabs defaultActiveKey="follower">
                     <Tab eventKey="follower" title="Follower">
-                      <UsersList n="5" />
+                      <Follower profileUserId={this.props.profileUserId} />
                     </Tab>
                     <Tab eventKey="following" title="Following">
-                      <UsersList n="3" />
+                      <Following profileUserId={this.props.profileUserId} />
                     </Tab>
                   </Tabs>
                 </Col>
@@ -101,7 +91,7 @@ class MyProfile extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <ProfileEditForm
-              userId={this.state.userData.userId}
+              profileUserId={this.props.profileUserId}
               firstName={this.state.userData.firstName}
               lastName={this.state.userData.lastName}
               about={this.state.userData.about}
@@ -118,7 +108,7 @@ class ProfileEditForm extends React.Component {
     super(props);
     this.state = {
       postData: {
-        userId: this.props.userId,
+        userId: this.props.profileUserId,
         firstName: this.props.firstName,
         lastName: this.props.lastName,
         about: this.props.about,
@@ -145,7 +135,6 @@ class ProfileEditForm extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Row>
@@ -191,18 +180,55 @@ class ProfileEditForm extends React.Component {
   }
 }
 
-class UsersList extends React.Component {
+class Follower extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { data: [] };
+  }
+
+  async componentDidMount() {
+    await fetch("http://localhost:8000/follower/" + this.props.profileUserId + "/")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ data: data });
+      });
   }
 
   render() {
     return (
       <ListGroup variant="flush">
-        <ListGroup.Item key={1}>
-          <UserRow />
-        </ListGroup.Item>
+        {this.state.data.map((u) => {
+          return <UserRow key={u.userId_A} rowId={u.userId_A} />;
+        })}
+      </ListGroup>
+    );
+  }
+}
+
+class Following extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { data: [] };
+  }
+
+  async componentDidMount() {
+    await fetch("http://localhost:8000/following/" + this.props.profileUserId + "/")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ data: data });
+      });
+  }
+
+  render() {
+    return (
+      <ListGroup variant="flush">
+        {this.state.data.map((u) => {
+          return <UserRow key={u.userId_B} rowId={u.userId_B} />;
+        })}
       </ListGroup>
     );
   }
@@ -211,28 +237,45 @@ class UsersList extends React.Component {
 class UserRow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { data: { firstName: "", lastName: "", about: "" } };
   }
+
+  async componentDidMount() {
+    await fetch("http://localhost:8000/users/" + this.props.rowId + "/")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ data: data });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   render() {
+    console.log(this.state);
     return (
-      <Container className="userrow">
-        <Row>
-          <Col lg="auto">
-            <Image src={userImg} roundedCircle />
-          </Col>
-          <Col>
-            <div>
-              <b>Firstname LastName</b>
-            </div>
-            <div>about me</div>
-          </Col>
-          <Col lg="auto">
-            <Button variant="primary" size="sm">
-              Follow
-            </Button>
-          </Col>
-        </Row>
-      </Container>
+      <ListGroup.Item>
+        <Container className="userrow">
+          <Row>
+            <Col lg="auto">
+              <Image src={userImg} roundedCircle />
+            </Col>
+            <Col>
+              <div>
+                <b>{this.state.data.firstName + " " + this.state.data.lastName}</b>
+              </div>
+              <div>{this.state.data.about}</div>
+            </Col>
+            <Col lg="auto">
+              <Button variant="primary" size="sm">
+                Follow
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </ListGroup.Item>
     );
   }
 }
@@ -247,7 +290,11 @@ class SuggestUser extends React.Component {
       <Card>
         <Card.Header>Suggest</Card.Header>
         <Card.Body id="no-padding">
-          <UsersList n="4" />
+          <ListGroup variant="flush">
+            <ListGroup.Item key={1}>
+              <UserRow />
+            </ListGroup.Item>
+          </ListGroup>
         </Card.Body>
       </Card>
     );
@@ -259,13 +306,14 @@ class Profile extends React.Component {
     super(props);
     this.state = {};
   }
+
   render() {
     return (
       <div className="profile">
         <Container>
           <Row>
             <Col lg="7">
-              <MyProfile />
+              <MyProfile profileUserId={parseInt(this.props.params.profileUserId)} />
             </Col>
             <Col>
               <SuggestUser />

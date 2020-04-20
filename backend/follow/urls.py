@@ -7,5 +7,6 @@ urlpatterns = [
     path('follows/<int:pk>/', views.follow_detail),
     path('follower/<int:userId>/', views.get_follower),
     path('following/<int:userId>/', views.get_following),
+    path('unfollow/', views.follow_list)
 
 ]

@@ -31,10 +31,10 @@ class Login extends React.Component {
       });
       return 0;
     }
-    res.json().then((data) => {
+    await res.json().then((data) => {
       sessionStorage.setItem("token", data.auth_token);
     });
-
+    console.log(sessionStorage.getItem("token"));
     await fetch("http://localhost:8000/auth/users/me/", {
       headers: { Authorization: "Token " + sessionStorage.getItem("token") },
     })
@@ -45,8 +45,7 @@ class Login extends React.Component {
         sessionStorage.setItem("id", data.id);
         sessionStorage.setItem("username", data.username);
       });
-
-    window.location.href = "/profile";
+    window.location.href = "/profile/" + sessionStorage.getItem("id");
   };
 
   render() {
