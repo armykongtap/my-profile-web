@@ -8,4 +8,4 @@ class FollowModel(models.Model):
     userId_B = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return ("#" + self.followId + " " + self.userId_A + " follow " + self.userId_B)
+        return ("#" + str(self.followId) + " " + str(self.userId_A) + " follow " + str(self.userId_B))

@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 
 from follow.models import FollowModel
 from follow.serializers import FollowModelSerializer
+from django.contrib.auth.models import User
 
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -17,6 +18,10 @@ def follow_list(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        follow = FollowModel.objects.filter(
+            userId_A=data["userId_A"], userId_B=data["userId_B"])
+        if follow:
+            return HttpResponse(status=400)
         serializer = FollowModelSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -66,3 +71,28 @@ def get_following(request, userId):
         follows = FollowModel.objects.filter(userId_A=userId)
         serializer = FollowModelSerializer(follows, many=True)
         return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])
+def is_follow(request, userId_A, userId_B):
+
+    if request.method == 'GET':
+        try:
+            follow = FollowModel.objects.get(
+                userId_A=userId_A, userId_B=userId_B)
+            return HttpResponse(status=200)
+
+        except:
+            return HttpResponse(status=404)
+
+
+@api_view(['GET'])
+def get_not_following(request, userId):
+    allUser = set()
+    followUser = set()
+    followUser.add(userId)
+    for i in User.objects.all():
+        allUser.add(i.id)
+    for i in FollowModel.objects.filter(userId_A=userId):
+        followUser.add(i.userId_B)
+    return JsonResponse(list(allUser-followUser), safe=False, json_dumps_params={'ensure_ascii': False})

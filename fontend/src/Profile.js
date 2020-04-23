@@ -65,7 +65,7 @@ class MyProfile extends React.Component {
                       Edit Profile
                     </Button>
                   ) : (
-                    ""
+                    <FollowButton rowUserId={this.props.profileUserId} />
                   )}
                 </Col>
               </Row>
@@ -126,7 +126,7 @@ class ProfileEditForm extends React.Component {
     });
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = async () => {
     await fetch("http://localhost:8000/users/" + this.state.postData.userId + "/", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -197,11 +197,22 @@ class Follower extends React.Component {
   }
 
   render() {
+    console.log(this.state.data.length);
     return (
       <ListGroup variant="flush">
-        {this.state.data.map((u) => {
-          return <UserRow key={u.userId_A} rowId={u.userId_A} />;
-        })}
+        {this.state.data.length === 0 ? (
+          <ListGroup.Item>
+            <Container className="userrow">
+              <Row>No Follower</Row>
+            </Container>
+          </ListGroup.Item>
+        ) : (
+          <div>
+            {this.state.data.map((u) => {
+              return <UserRow key={u.userId_A} rowUserId={u.userId_A} />;
+            })}
+          </div>
+        )}
       </ListGroup>
     );
   }
@@ -226,10 +237,62 @@ class Following extends React.Component {
   render() {
     return (
       <ListGroup variant="flush">
-        {this.state.data.map((u) => {
-          return <UserRow key={u.userId_B} rowId={u.userId_B} />;
-        })}
+        {this.state.data.length === 0 ? (
+          <ListGroup.Item>
+            <Container className="userrow">
+              <Row>No Following</Row>
+            </Container>
+          </ListGroup.Item>
+        ) : (
+          <div>
+            {this.state.data.map((u) => {
+              return <UserRow key={u.userId_B} rowUserId={u.userId_B} />;
+            })}
+          </div>
+        )}
       </ListGroup>
+    );
+  }
+}
+
+class SuggestUser extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { data: [] };
+  }
+
+  async componentDidMount() {
+    await fetch("http://localhost:8000/suggest/" + sessionStorage.getItem("id") + "/")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ data: data });
+      });
+  }
+
+  render() {
+    return (
+      <Card>
+        <Card.Header>Suggest</Card.Header>
+        <Card.Body id="no-padding">
+          <ListGroup variant="flush">
+            {this.state.data.length === 0 ? (
+              <ListGroup.Item>
+                <Container className="userrow">
+                  <Row>No Suggestion</Row>
+                </Container>
+              </ListGroup.Item>
+            ) : (
+              <div>
+                {this.state.data.map((u) => {
+                  return <UserRow key={u} rowUserId={u} />;
+                })}
+              </div>
+            )}
+          </ListGroup>
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -241,7 +304,7 @@ class UserRow extends React.Component {
   }
 
   async componentDidMount() {
-    await fetch("http://localhost:8000/users/" + this.props.rowId + "/")
+    await fetch("http://localhost:8000/users/" + this.props.rowUserId + "/")
       .then((res) => {
         return res.json();
       })
@@ -254,7 +317,6 @@ class UserRow extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <ListGroup.Item>
         <Container className="userrow">
@@ -269,9 +331,7 @@ class UserRow extends React.Component {
               <div>{this.state.data.about}</div>
             </Col>
             <Col lg="auto">
-              <Button variant="primary" size="sm">
-                Follow
-              </Button>
+              <FollowButton rowUserId={this.props.rowUserId} />
             </Col>
           </Row>
         </Container>
@@ -280,23 +340,89 @@ class UserRow extends React.Component {
   }
 }
 
-class SuggestUser extends React.Component {
+class FollowButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isfollow: true,
+      postData: {
+        userId_A: sessionStorage.getItem("id"),
+        userId_B: this.props.rowUserId,
+      },
+      buttonVariant: "outline-primary",
+      buttonValue: "Following",
+    };
+    this.handleFollow.bind(this);
+    this.handleUnfollow.bind(this);
   }
+
+  async componentDidMount() {
+    this.fetchIsfollow();
+  }
+
+  fetchIsfollow = async () => {
+    await fetch(
+      "http://localhost:8000/isfollow/" +
+        sessionStorage.getItem("id") +
+        "&" +
+        this.props.rowUserId +
+        "/"
+    ).then((res) => {
+      this.setState({ isfollow: res.ok });
+    });
+  };
+
+  handleFollow = async () => {
+    await fetch("http://localhost:8000/follows/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.state.postData),
+    });
+    this.fetchIsfollow();
+  };
+
+  handleUnfollow = async () => {
+    await fetch("http://localhost:8000/unfollow/", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.state.postData),
+    });
+    this.fetchIsfollow();
+  };
+
+  handleOnMouseOver = () => {
+    this.setState({ buttonVariant: "danger", buttonValue: "Unfollow" });
+  };
+
+  handleOnMouseLeave = () => {
+    this.setState({ buttonVariant: "outline-primary", buttonValue: "Following" });
+  };
+
   render() {
     return (
-      <Card>
-        <Card.Header>Suggest</Card.Header>
-        <Card.Body id="no-padding">
-          <ListGroup variant="flush">
-            <ListGroup.Item key={1}>
-              <UserRow />
-            </ListGroup.Item>
-          </ListGroup>
-        </Card.Body>
-      </Card>
+      <div>
+        {sessionStorage.getItem("id") == this.props.rowUserId ? (
+          ""
+        ) : (
+          <div className="follow-button">
+            {this.state.isfollow ? (
+              <Button
+                variant={this.state.buttonVariant}
+                size="sm"
+                onClick={this.handleUnfollow}
+                onMouseOver={this.handleOnMouseOver}
+                onMouseLeave={this.handleOnMouseLeave}
+              >
+                {this.state.buttonValue}
+              </Button>
+            ) : (
+              <Button variant="primary" size="sm" onClick={this.handleFollow}>
+                Follow
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
     );
   }
 }

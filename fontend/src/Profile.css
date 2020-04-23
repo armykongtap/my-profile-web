@@ -57,3 +57,7 @@ form {
 .modal-content .btn {
   width: 65px;
 }
+
+.follow-button .btn {
+  width: 80px;
+}
