@@ -34,7 +34,6 @@ class Login extends React.Component {
     await res.json().then((data) => {
       sessionStorage.setItem("token", data.auth_token);
     });
-    console.log(sessionStorage.getItem("token"));
     await fetch("http://localhost:8000/auth/users/me/", {
       headers: { Authorization: "Token " + sessionStorage.getItem("token") },
     })

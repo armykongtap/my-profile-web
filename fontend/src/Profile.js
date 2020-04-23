@@ -325,9 +325,9 @@ class UserRow extends React.Component {
               <Image src={userImg} roundedCircle />
             </Col>
             <Col>
-              <div>
+              <a href={"/profile/" + this.props.rowUserId}>
                 <b>{this.state.data.firstName + " " + this.state.data.lastName}</b>
-              </div>
+              </a>
               <div>{this.state.data.about}</div>
             </Col>
             <Col lg="auto">
@@ -401,7 +401,7 @@ class FollowButton extends React.Component {
   render() {
     return (
       <div>
-        {sessionStorage.getItem("id") == this.props.rowUserId ? (
+        {parseInt(sessionStorage.getItem("id")) === this.props.rowUserId ? (
           ""
         ) : (
           <div className="follow-button">

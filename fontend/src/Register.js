@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Card, InputGroup, Row, Col } from "react-bootstrap";
+import { Button, Form, Card, Col } from "react-bootstrap";
 import "./login-regis.css";
 
 class Register extends React.Component {

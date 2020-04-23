@@ -61,3 +61,11 @@ form {
 .follow-button .btn {
   width: 80px;
 }
+
+.userrow a:link,
+.userrow a:visited,
+.userrow a:hover,
+.userrow a:active {
+  color: black;
+  text-decoration: none;
+}
