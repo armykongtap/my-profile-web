@@ -29,7 +29,8 @@ def user_list(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        data['color'] = random.randint(1, 10)
+        data['color'] = "#" + \
+            ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
         serializer = UserModelSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
