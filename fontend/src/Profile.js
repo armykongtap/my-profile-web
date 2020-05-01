@@ -6,13 +6,11 @@ import {
   Container,
   Tabs,
   Tab,
-  Image,
   Button,
   ListGroup,
   Modal,
   Form,
 } from "react-bootstrap";
-import userImg from "./Material/user.png";
 import "./Profile.css";
 import { FaUser } from "react-icons/fa";
 
