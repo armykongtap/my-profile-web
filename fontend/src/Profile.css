@@ -4,6 +4,7 @@
 
 .my-profile .rounded-circle {
   height: 200px;
+  width: 200px;
   border: 2px solid #ddd;
   padding: 5px;
 }
@@ -23,6 +24,7 @@
 
 .userrow .rounded-circle {
   height: 50px;
+  width: 50px;
   border: 1px solid #ddd;
   padding: 1px;
 }

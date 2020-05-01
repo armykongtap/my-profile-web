@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import userImg from "./Material/user.png";
 import "./Profile.css";
+import { FaUser } from "react-icons/fa";
 
 class MyProfile extends React.Component {
   constructor(props) {
@@ -30,12 +31,12 @@ class MyProfile extends React.Component {
         return res.json();
       })
       .then((data) => {
-        let tempData = this.state.userData;
-        tempData["firstName"] = data.firstName;
-        tempData["lastName"] = data.lastName;
-        tempData["about"] = data.about;
+        // let tempData = this.state.userData;
+        // tempData["firstName"] = data.firstName;
+        // tempData["lastName"] = data.lastName;
+        // tempData["about"] = data.about;
         this.setState({
-          userData: tempData,
+          userData: data,
         });
       });
   }
@@ -48,7 +49,7 @@ class MyProfile extends React.Component {
             <Container>
               <Row>
                 <Col lg="auto">
-                  <Image src={userImg} roundedCircle />
+                  <FaUser color={this.state.userData.color} class="rounded-circle" />
                 </Col>
                 <Col id="margin-top-10">
                   <div id="name">
@@ -197,7 +198,6 @@ class Follower extends React.Component {
   }
 
   render() {
-    console.log(this.state.data.length);
     return (
       <ListGroup variant="flush">
         {this.state.data.length === 0 ? (
@@ -300,7 +300,7 @@ class SuggestUser extends React.Component {
 class UserRow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: { firstName: "", lastName: "", about: "" } };
+    this.state = { data: { firstName: "", lastName: "", about: "", color: "" } };
   }
 
   async componentDidMount() {
@@ -322,7 +322,7 @@ class UserRow extends React.Component {
         <Container className="userrow">
           <Row>
             <Col lg="auto">
-              <Image src={userImg} roundedCircle />
+              <FaUser color={this.state.data.color} class="rounded-circle" />
             </Col>
             <Col>
               <a href={"/profile/" + this.props.rowUserId}>
