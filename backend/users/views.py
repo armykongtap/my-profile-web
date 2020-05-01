@@ -5,6 +5,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+import random
 
 from users.models import UserModel
 from users.serializers import UserModelSerializer
@@ -28,6 +29,7 @@ def user_list(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        data['color'] = random.randint(1, 10)
         serializer = UserModelSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
